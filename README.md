@@ -175,6 +175,6 @@ validation of the paper's specific SHAP values.
 
 ## Limitations
 
-See `technical_documentation.md`, Section 11, for the full breakdown (synthetic data and mask, spatial rather
+See `technical_documentation`, Section 11, for the full breakdown (synthetic data and mask, spatial rather
 than temporal attention, small patch size, permutation importance in place of SHAP, no GIS export in this
 proof-of-concept).
