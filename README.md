@@ -1,70 +1,12 @@
-
-Claude finished the response
-flood_susceptibility_cnn_vs_hydrotransformer_final (2).ipynb
-flood_susceptibility_cnn_vs_hydrotransformer_fin
-al (2)
-.ipynb
-IPYNB
-flood springer 1.pdf
-pdf
-
-ai-ml assignment.pdf
-pdf
-
-technical_documentation.md
-technical_documentation.md
-MD
-README.md
-README.md
-150 lines
-MD
-so i have an assignment submission so i have given you all files the project ipynb file and the assignment files also so i want you to go through all of these three and make sure you have 0 plag in the not coding part of the ipynb file like there is an explination cell above almost each piece of code i want you to understand and change that stuff to 0 plag based on the code below and the outputs accordingly and please give me ared me and a technical document they asked and do that also with 0 plag for references i have share 2 files(these are my friesnds so they have a different approach and outputs) so accordingly do this only and finall retun the final ipynb file the technincal document and read me only only do this only
-
-Reviewing a flood susceptibility modeling notebook project.
-Reviewing a flood susceptibility modeling notebook project.
-I'll start by examining your notebook to understand the actual code, outputs, and current explanation cells, then compare against the two reference files you mentioned.
-
-Ran 9 commands
-Now I have the full picture: your notebook's actual executed numbers differ slightly from the two reference files (e.g. your real AUC is 0.9704/0.9706, not 0.9705/0.9707), confirming these are a different run/write-up I should not mirror. I'll now rewrite every markdown explanation cell in your notebook in fresh wording grounded in your actual code and outputs, then write a new README and technical document from scratch.
-
-Ran 9 commands, created 3 files
-All confirmed: every code cell and its outputs are byte-for-byte identical to your original — only the 14 markdown explanation cells were rewritten, in fresh wording, grounded in your actual code and executed results (not the two reference files' numbers, which came from a different run).
-
-Presented 3 files
-Presented 3 files
-Here's what I did:
-
-Notebook: rewrote all 14 markdown explanation cells in fresh, original phrasing — each one grounded in the actual code and the actual printed/plotted output right below it (not the two reference files' numbers, which turned out to be from a different run: 0.9705/0.9707 there vs. your real 0.9704/0.9706). Every code cell and its outputs are untouched.
-README.md: new structure and wording, built entirely from your notebook's real numbers (full results table, confusion matrices, the 9-row threshold sweep, permutation-importance table).
-technical_documentation.md: follows the assignment's required section list, but freshly written and restructured, same real numbers throughout, with the temporal-transformer/hydro-attention "framing correction" stated as your own honest caveat rather than copied phrasing.
-If you want, I can also convert the technical doc to a PDF/Word file to match the submission format the brief asks for.
-
-
-Flood susceptibility cnn vs hydrotransformer
-IPYNB 
-
-Technical documentation
-Document·MD 
-
-Readme
-Document·MD 
-
-
-
-Capsule Hub
-Claude is AI and can make mistakes.
-
-
-Readme · MD
 # Urban Flood Susceptibility — CNN Baseline vs. a Simplified Hydro-TransformerNet
- 
+
 A 12-hour AI/ML technical assessment submission: a small-scale, honestly-evaluated implementation of the
 methodology behind **Hydro-TransformerNet** (Chakrabortty et al., 2026, *Earth Systems and Environment*),
 built to directly answer one question — on a controlled synthetic task, does adding a transformer bottleneck
 and a hydro-inspired attention gate actually improve on a plain CNN encoder–decoder?
- 
+
 ## Overview
- 
+
 The reference paper predicts urban flood susceptibility for Sharjah, UAE, using a ResNet-based CNN encoder,
 a transformer that models the *temporal* persistence of rainfall/surface conditions, and a hydrologically
 guided attention gate, trained against an expert-designed synthetic flood mask (no historical flood inventory
@@ -73,16 +15,16 @@ scale, or dataset — the assessment brief is explicit that this isn't required.
 overall *methodology* (CNN → attention bottleneck → hydro-attention gate → decoder, trained with a BCE-style
 loss against a synthetic mask) at toy scale, and puts it head-to-head against a matched CNN-only baseline so
 the effect of the added block can actually be measured rather than assumed.
- 
+
 ## Dataset Used
- 
+
 Fully synthetic, generated inside the notebook — no licensed real Sharjah/UAE raster data was available for
 this assessment. Each sample is a 9-channel × 32×32 patch:
- 
+
 | Channel | Represents |
 |---|---|
 | 0–8 | DEM, Slope, TWI, NDVI, NDWI, LULC, Impervious Surface, Soil Type, Rainfall |
- 
+
 Every channel is generated as a **low-frequency, Gaussian-smoothed random field**, not independent per-pixel
 noise — this mirrors the spatial autocorrelation a real raster has (a real DEM or rainfall surface doesn't
 jump randomly from one pixel to the next). Slope is derived from the DEM's gradient rather than sampled on
@@ -91,17 +33,18 @@ TWI/rainfall/imperviousness with a genuine **neighbourhood-dependent depression 
 − DEM`), so the label cannot be recovered from a single pixel's values in isolation — a model needs some
 spatial context to do well. The result is then quantile-thresholded per patch to hold the positive-pixel rate
 close to a stable **~40%** in both splits: 800 training patches, 200 validation patches.
- 
+
 ## Approach
- 
+
 Two models sharing an identical CNN encoder/decoder backbone, so the comparison isolates the effect of the
 added block:
- 
+
 - **Model A — CNN Baseline:** a U-Net-style encoder–decoder, residual `ConvBlock`s, 4 depth levels
   (32→64→128→256 channels), skip connections. No attention or temporal component.
 - **Model B — Simplified HydroTransformerNet:** same backbone, plus at the bottleneck a
   `TransformerBottleneck` (4-head self-attention **over the 16 spatial positions of the 4×4 bottleneck
   feature map**) and a `HydroAttentionGate` (`α = σ(Conv3×3(F))`, `F_out = F ⊙ α`).
+
   > **Framing note:** the paper's transformer attends across *simulated time steps* to model how rainfall and
   > surface conditions persist over time. What's built here has **no time axis at all** — every sample is one
   > static patch, so this is spatial self-attention across regions of that patch, used as a simplified
@@ -109,25 +52,27 @@ added block:
   > multi-day sequence to feed an actual temporal encoder. Likewise, the hydro-attention gate learns its mask
   > directly from the CNN/Transformer features rather than from a separate hydro-morphological mask input as
   > in the paper's eq. 8–9 — it's hydro-*inspired*, not a reproduction of that mechanism.
+
 Both models are trained with `0.5 × BCE + 0.5 × Dice` loss, the AdamW optimizer with a cosine learning-rate
 schedule, and early stopping on best validation AUC (patience 6, max 20 epochs), from the same random seed.
- 
+
 ## Technology / Tools Used
- 
+
 - Python, PyTorch (`torch.nn.MultiheadAttention` for the transformer bottleneck)
 - `scikit-learn` (AUC, F1, precision/recall, confusion matrix, ROC, precision–recall curve)
 - `numpy`, `scipy.ndimage` (Gaussian/uniform filters for the synthetic rasters), `matplotlib`
 - Runs on Google Colab or a local Jupyter environment; CUDA if available, CPU otherwise
+
 ## Setup Instructions
- 
+
 ```bash
 pip install torch scikit-learn scipy numpy matplotlib
 ```
 On Colab, `scipy` and `scikit-learn` are already installed; the notebook's first cell installs them
 defensively regardless.
- 
+
 ## How to Run
- 
+
 1. Open `flood_susceptibility_cnn_vs_hydrotransformer.ipynb` in Jupyter or Colab.
 2. Run all cells top to bottom. Roughly, in order:
    - Sec. 1 — synthetic dataset generation and a look at the generated channels/masks
@@ -140,13 +85,14 @@ defensively regardless.
    - Sec. 9 — permutation feature importance
    - Sec. 10–11 — what the run actually shows, and where a production version would need to go further
 3. Trained weights (`model_a.pt`, `model_b.pt`) and a results JSON are written to `outputs/`.
+
 Training takes a few minutes on CPU at this patch size/dataset size, faster with a GPU.
- 
+
 ## Results
- 
+
 These are the real numbers produced by running the notebook end-to-end, taken from each model's
 best-validation-AUC checkpoint (200 validation patches, 32×32 pixels each = 204,800 total pixels):
- 
+
 | Metric | CNN Baseline | HydroTransformerNet | Higher |
 |---|---:|---:|---|
 | AUC | 0.9704 | 0.9706 | HydroTransformerNet |
@@ -157,15 +103,15 @@ best-validation-AUC checkpoint (200 validation patches, 32×32 pixels each = 204
 | Kappa | 0.8016 | 0.8020 | HydroTransformerNet |
 | Specificity | 0.9195 | 0.9222 | HydroTransformerNet |
 | IoU | 0.7875 | 0.7875 | tie |
- 
+
 Best checkpoint: epoch 19/20 for the CNN Baseline; epoch 12/20 for HydroTransformerNet (training continued to
 epoch 18 before early stopping triggered on no further AUC improvement).
- 
+
 Confusion matrices — **CNN Baseline:** TP=72,367 · TN=112,911 · FP=9,889 · FN=9,633. **HydroTransformerNet:**
 TP=72,102 · TN=113,243 · FP=9,557 · FN=9,898.
- 
+
 **Threshold sweep (Sec. 7b)** — Recall / Precision / Specificity / IoU at nine thresholds from 0.1 to 0.9:
- 
+
 | Threshold | Recall (CNN) | Recall (Hydro) | Specificity (CNN) | Specificity (Hydro) | IoU (CNN) | IoU (Hydro) |
 |---:|---:|---:|---:|---:|---:|---:|
 | 0.1 | 0.9681 | 0.9687 | 0.7860 | 0.7854 | 0.7331 | 0.7331 |
@@ -177,13 +123,13 @@ TP=72,102 · TN=113,243 · FP=9,557 · FN=9,898.
 | 0.7 | 0.8276 | 0.8215 | 0.9517 | 0.9544 | 0.7718 | 0.7690 |
 | 0.8 | 0.7873 | 0.7786 | 0.9663 | 0.9692 | 0.7495 | 0.7442 |
 | 0.9 | 0.7177 | 0.7069 | 0.9826 | 0.9849 | 0.6995 | 0.6912 |
- 
+
 Except at the lowest threshold tested (0.1), the CNN Baseline holds a small but consistent recall edge over
 HydroTransformerNet across the entire sweep — this direction of trade-off (recall up, specificity down as the
 threshold drops) is guaranteed by construction; the two models mainly differ in how they land on that curve.
- 
+
 **Permutation feature importance** (AUC drop when a channel is shuffled across the validation set):
- 
+
 | Channel | CNN Baseline | HydroTransformerNet |
 |---|---:|---:|
 | DEM | 0.1368 | 0.1330 |
@@ -195,15 +141,15 @@ threshold drops) is guaranteed by construction; the two models mainly differ in 
 | NDWI | 0.0002 | 0.0002 |
 | SoilType | 0.0000 | 0.0000 |
 | LULC | -0.0001 | 0.0000 |
- 
+
 DEM and TWI dominate for both models, Rainfall is a clear secondary driver, and NDVI/NDWI/LULC/SoilType/Slope
 contribute almost nothing — **qualitatively similar to the paper's SHAP-based ranking** (elevation, slope and
 rainfall as the dominant predictors), obtained here with a different attribution method (permutation
 importance rather than SHAP) on entirely different data. This should be read as a qualitative echo, not a
 validation of the paper's specific SHAP values.
- 
+
 ## Key Observations
- 
+
 1. **The two models are extremely close overall.** F1 and IoU tie at four decimal places; AUC, accuracy,
    precision, kappa and specificity all favor HydroTransformerNet, but only narrowly.
 2. **The CNN Baseline has the higher recall — at the default threshold and almost everywhere else in the
@@ -226,15 +172,9 @@ validation of the paper's specific SHAP values.
 7. **A production deployment should not default to a 0.5 threshold.** For disaster-management use, the
    operating point should be chosen from the Sec. 7b sweep to favor recall within an acceptable false-alarm
    budget, not left at the arbitrary default.
+
 ## Limitations
- 
+
 See `technical_documentation.md`, Section 11, for the full breakdown (synthetic data and mask, spatial rather
 than temporal attention, small patch size, permutation importance in place of SHAP, no GIS export in this
 proof-of-concept).
- 
-
-
-
-
-
-
