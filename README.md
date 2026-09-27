@@ -174,7 +174,7 @@ validation of the paper's specific SHAP values.
    budget, not left at the arbitrary default.
 
 ## Limitations
-
-See `technical_documentation`, Section 11, for the full breakdown (synthetic data and mask, spatial rather
-than temporal attention, small patch size, permutation importance in place of SHAP, no GIS export in this
-proof-of-concept).
+Synthetic dataset — smoothed random fields plus a hand-designed depression term, not real rasters
+Synthetic flood mask, rule-based and never field-validated
+Permutation importance only, a qualitative echo rather than a validation of the paper's SHAP results
+No GIS export in this proof-of-concept
