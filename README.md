@@ -178,3 +178,5 @@ Synthetic dataset — smoothed random fields plus a hand-designed depression ter
 Synthetic flood mask, rule-based and never field-validated
 Permutation importance only, a qualitative echo rather than a validation of the paper's SHAP results
 No GIS export in this proof-of-concept
+
+I reproduced the core concept, not the exact architecture. I kept the nine input features and the CNN-plus-attention idea, and I added a Transformer bottleneck. But because I didn't have the original Sharjah dataset or real temporal sequences, I used synthetic spatial data and implemented the Transformer as spatial self-attention. So my work is a simplified proof-of-concept rather than an exact reproduction.
