@@ -1,6 +1,6 @@
 # Urban Flood Susceptibility — CNN Baseline vs. a Simplified Hydro-TransformerNet
 
-A 12-hour AI/ML technical assessment submission: a small-scale, honestly-evaluated implementation of the
+A small-scale, honestly-evaluated implementation of the
 methodology behind **Hydro-TransformerNet** (Chakrabortty et al., 2026, *Earth Systems and Environment*),
 built to directly answer one question — on a controlled synthetic task, does adding a transformer bottleneck
 and a hydro-inspired attention gate actually improve on a plain CNN encoder–decoder?
